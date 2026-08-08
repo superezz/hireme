@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { dummyResumeData } from "../assets/assets";
+import api from "../config/api";
 import { useEffect, useState } from "react";
 import ResumePreview from "../components/ResumePreview";
 import { ArrowLeftIcon, Loader } from "lucide-react";
@@ -9,21 +9,19 @@ const Preview = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [resumeData, setResumeData] = useState(null);
 
-  const loadResume = async () => {
-    try {
-      const { data } = await api.get("/api/resumes/public/" + resumeId);
-
-      setResumeData(data.resume);
-    } catch (error) {
-      console.log(error.message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const loadResume = async () => {
+      try {
+        const { data } = await api.get("/api/resumes/public/" + resumeId);
+        setResumeData(data.resume);
+      } catch (error) {
+        console.log(error.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
     loadResume();
-  }, []);
+  }, [resumeId]);
 
   return resumeData ? (
     <div className="bg-slate-100">
@@ -48,7 +46,7 @@ const Preview = () => {
 
           <a
             href="/"
-            className="mt-6 bg-green-500 hover:bg-green-600 text-white rounded-full px-6 h-9 m-1 ring-offset-1 ring-1 ring-green-400 flex items-center transition-colors"
+            className="mt-6 bg-brand-primary hover:bg-brand-primary-hover text-white rounded-full px-6 h-9 m-1 ring-offset-1 ring-1 ring-brand-primary/50 flex items-center transition-colors"
           >
             <ArrowLeftIcon className="mr-2 size-4" />
             go to home page

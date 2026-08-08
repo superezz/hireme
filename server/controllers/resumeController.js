@@ -166,7 +166,7 @@ export const updateResume = async (req, res) => {
 
     }
 
-    const resume = await Resume.findByIdAndUpdate(
+    const resume = await Resume.findOneAndUpdate(
       {
         userId,
         _id: resumeId
@@ -176,6 +176,12 @@ export const updateResume = async (req, res) => {
         new: true
       }
     );
+
+    if (!resume) {
+      return res.status(404).json({
+        message: 'Resume not found'
+      });
+    }
 
     return res.status(200).json({
       message: 'Saved successfully',

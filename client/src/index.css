@@ -3,6 +3,18 @@
 
 @import "tailwindcss";
 
+@theme {
+  --color-brand-primary: #5245ff;
+  --color-brand-primary-hover: #4235e0;
+  --color-brand-navy: #0a0e4d;
+  --color-brand-navy-light: #121870;
+  
+  --color-brand-light: #eff0ff;
+  --color-brand-subtle: #f5f6ff;
+  
+  --color-brand-accent: #7c3aed;
+}
+
 *{
 
     font-family: "Outfit", sans-serif;
@@ -16,11 +28,11 @@
 
   input:not([type="checkbox"]) {
     @apply outline-none focus:ring border border-gray-300
-    focus:ring-blue-500 focus:border-blue-500 rounded-lg;
+    focus:ring-brand-primary/30 focus:border-brand-primary rounded-lg;
   }
 
   textarea {
     @apply outline-none focus:ring border border-gray-300
-    focus:ring-blue-500 focus:border-blue-500 rounded-lg resize-none;
+    focus:ring-brand-primary/30 focus:border-brand-primary rounded-lg resize-none;
   }
 }

@@ -1,32 +1,30 @@
-import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { logout } from "../app/features/authSlice";
 
 const Navbar = () => {
-const {user} = useSelector(state =>state.auth)
-const dispatch = useDispatch()
-
+  const { user } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const logoutUser = () => {
     navigate("/");
-    dispatch(logout())
+    dispatch(logout());
   };
 
   return (
-    <div className="shadow bg-white">
-      <nav className="flex items-center justify-between max-w-7xl mx-auto px-4 py-3.5 text-slate-800 transition-all">
+    <div className="bg-white border-b border-slate-200">
+      <nav className="flex items-center justify-between max-w-7xl mx-auto px-6 py-4 text-slate-800 transition-all">
         <Link to="/">
-          <img src="/logo.svg" alt="logo" className="h-11 w-auto" />
+          <img src="/viewme-logo.png" alt="ViewMe" className="h-10 w-auto object-contain" />
         </Link>
 
-        <div className="flex items-center gap-4 text-sm">
-          <p className="max-sm:hidden">Hi, {user?.name}</p>
+        <div className="flex items-center gap-6 text-sm font-medium">
+          <p className="max-sm:hidden text-slate-600">Hi, {user?.name}</p>
 
           <button
             onClick={logoutUser}
-            className="bg-white hover:bg-slate-50 border border-gray-300 px-7 py-1.5 rounded-full active:scale-95 transition-all"
+            className="bg-white hover:bg-slate-50 border border-slate-300 hover:border-slate-400 px-6 py-2 rounded-full active:scale-95 transition-all duration-200 shadow-sm hover:shadow text-slate-700 hover:-translate-y-0.5"
           >
             Logout
           </button>

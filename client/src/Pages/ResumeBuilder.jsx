@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 import { Link, useParams } from "react-router-dom";
-import dummyResumeData from "../assets/assets";
 import {
   ArrowLeftIcon,
   Briefcase,
@@ -25,13 +24,11 @@ import ExperienceForm from "../components/ExperienceForm";
 import EducationForm from "../components/EducationForm";
 import ProjectForm from "../components/ProjectForm";
 import SkillsForm from "../components/SkillsForm";
-import { useSelector } from "react-redux";
 import api from "../config/api";
 import toast from "react-hot-toast";
 
 const ResumeBuilder = () => {
   const { resumeId } = useParams();
-  const { token } = useSelector((state) => state.auth);
 
   const [resumeData, setResumeData] = useState({
     _id: "",
@@ -46,23 +43,6 @@ const ResumeBuilder = () => {
     accent_color: "#3B82F6",
     public: false,
   });
-
-  const loadExistingResume = async () => {
-    try {
-      const { data } = await api.get("/api/resumes/get/" + resumeId, {
-        headers: {
-          Authorization: token,
-        },
-      });
-
-      if (data.resume) {
-        setResumeData(data.resume);
-        document.title = data.resume.title;
-      }
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
 
   const [activeSectionIndex, setActiveSectionIndex] = useState(0);
   const [removeBackground, setRemoveBackground] = useState(false);
@@ -79,8 +59,20 @@ const ResumeBuilder = () => {
   const activeSection = sections[activeSectionIndex];
 
   useEffect(() => {
+    const loadExistingResume = async () => {
+      try {
+        const { data } = await api.get("/api/resumes/get/" + resumeId);
+
+        if (data.resume) {
+          setResumeData(data.resume);
+          document.title = data.resume.title;
+        }
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
     loadExistingResume();
-  }, []);
+  }, [resumeId]);
 
   const changeResumeVisibility = async () => {
     try {
@@ -93,11 +85,7 @@ const ResumeBuilder = () => {
         JSON.stringify({ public: !resumeData.public }),
       );
 
-      const { data } = await api.put("/api/resumes/update", formData, {
-        headers: {
-          Authorization: token,
-        },
-      });
+      const { data } = await api.put("/api/resumes/update", formData);
 
       setResumeData({
         ...resumeData,
@@ -149,11 +137,7 @@ const ResumeBuilder = () => {
       typeof resumeData.personal_info.image === "object" &&
         formData.append("image", resumeData.personal_info.image);
 
-      const { data } = await api.put("/api/resumes/update", formData, {
-        headers: {
-          Authorization: token,
-        },
-      });
+      const { data } = await api.put("/api/resumes/update", formData);
 
       setResumeData(data.resume);
 
@@ -182,7 +166,7 @@ const ResumeBuilder = () => {
               <hr className="absolute top-0 left-0 right-0 border-2 border-gray-200" />
 
               <hr
-                className="absolute top-0 left-0 h-1 bg-gradient-to-r from-green-500 to-green-600 border-none transition-all duration-2000"
+                className="absolute top-0 left-0 h-1 bg-gradient-to-r from-brand-primary to-brand-accent border-none transition-all duration-2000"
                 style={{
                   width: `${(activeSectionIndex * 100) / (sections.length - 1)}%`,
                 }}
@@ -330,9 +314,9 @@ const ResumeBuilder = () => {
                     error: "Failed to save resume",
                   });
                 }}
-                className="bg-gradient-to-br from-green-100 to-green-200
-                 ring-green-300 text-green-600 ring hover:ring-green-400
-                  transition-all rounded-md px-6 py-2 mt-6 text-sm"
+                className="bg-brand-primary/10
+                 ring-brand-primary/30 text-brand-primary ring hover:ring-brand-primary/50
+                  transition-all rounded-md px-6 py-2 mt-6 text-sm font-medium"
               >
                 Save Changes
               </button>
@@ -367,7 +351,7 @@ const ResumeBuilder = () => {
 
                 <button
                   onClick={downloadResume}
-                  className="flex items-center gap-2 px-6 py-2 text-xs bg-gradient-to-br from-green-100 to-green-200 text-green-600 rounded-lg ring-green-300 hover:ring transition-colors"
+                  className="flex items-center gap-2 px-6 py-2 text-xs bg-brand-primary text-white rounded-lg hover:bg-brand-primary-hover shadow-sm hover:shadow transition-all"
                 >
                   <DownloadIcon className="size-4" />
                   Download
