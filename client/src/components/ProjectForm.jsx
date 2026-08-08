@@ -1,5 +1,4 @@
 import { Plus, Trash2 } from "lucide-react";
-import React from "react";
 
 const ProjectForm = ({ data, onChange }) => {
   const addProject = () => {
@@ -41,7 +40,7 @@ const ProjectForm = ({ data, onChange }) => {
 
         <button
           onClick={addProject}
-          className="flex items-center gap-2 px-3 py-1 text-sm bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition-colors"
+          className="flex items-center gap-2 px-3 py-1 text-sm bg-brand-light text-brand-primary rounded-lg hover:bg-brand-primary/20 transition-colors"
         >
           <Plus className="size-4" />
           Add Project

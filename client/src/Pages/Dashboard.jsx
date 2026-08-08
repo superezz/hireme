@@ -8,16 +8,14 @@ import {
   UploadCloudIcon,
   XIcon,
 } from "lucide-react";
-import React, { useEffect, useState } from "react";
-import dummyResumeData from "../assets/assets";
+import { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+
 import api from "../config/api";
 import toast from "react-hot-toast";
 import pdfToText from "react-pdftotext";
 
 const Dashboard = () => {
-  const { user, token } = useSelector((state) => state.auth);
 
   const colors = ["#9333ea", "#d97706", "#dc2626", "#0284c7", "#16a34a"];
   const [allResumes, setAllResumes] = useState([]);
@@ -30,32 +28,13 @@ const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const loadAllResumes = async () => {
-    try {
-      const { data } = await api.get("/api/users/resumes", {
-        headers: {
-          Authorization: token,
-        },
-      });
-
-      setAllResumes(data.resumes);
-    } catch (error) {
-      toast.error(error?.response?.data?.message || error.message);
-    }
-  };
-
   const createResume = async (event) => {
     try {
       event.preventDefault();
 
       const { data } = await api.post(
         "/api/resumes/create",
-        { title },
-        {
-          headers: {
-            Authorization: token,
-          },
-        },
+        { title }
       );
 
       setAllResumes([...allResumes, data.resume]);
@@ -78,12 +57,7 @@ const Dashboard = () => {
       const resumeText = await pdfToText(resume);
       const { data } = await api.post(
         "/api/ai/upload-resume",
-        { title, resumeText },
-        {
-          headers: {
-            Authorization: token,
-          },
-        },
+        { title, resumeText }
       );
       setTitle("");
       setResume(null);
@@ -103,12 +77,7 @@ const Dashboard = () => {
         {
           resumeId: editResumeId,
           resumeData: { title },
-        },
-        {
-          headers: {
-            Authorization: token,
-          },
-        },
+        }
       );
 
       setAllResumes(
@@ -134,11 +103,7 @@ const Dashboard = () => {
       );
 
       if (confirm) {
-        const { data } = await api.delete(`/api/resumes/delete/${resumeId}`, {
-          headers: {
-            Authorization: token,
-          },
-        });
+        const { data } = await api.delete(`/api/resumes/delete/${resumeId}`);
 
         setAllResumes(allResumes.filter((resume) => resume._id !== resumeId));
 
@@ -150,6 +115,15 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
+    const loadAllResumes = async () => {
+      try {
+        const { data } = await api.get("/api/users/resumes");
+
+        setAllResumes(data.resumes);
+      } catch (error) {
+        toast.error(error?.response?.data?.message || error.message);
+      }
+    };
     loadAllResumes();
   }, []);
 
@@ -244,7 +218,7 @@ const Dashboard = () => {
           <form
             onSubmit={createResume}
             onClick={() => setShowCreateResumes(false)}
-            className="fixed inset-0 bg-black/70 backdrop-blur bg-opacity-50 z-10 flex items-center justify-center"
+            className="fixed inset-0 bg-black/70 bg-opacity-50 z-10 flex items-center justify-center"
           >
             <div
               onClick={(e) => e.stopPropagation()}
@@ -257,11 +231,11 @@ const Dashboard = () => {
                 value={title}
                 type="text"
                 placeholder="Enter resume title"
-                className="w-full px-4 py-2 mb-4 focus:border-green-600 ring-green-600"
+                className="w-full px-4 py-2 mb-4 focus:border-brand-primary focus:ring-brand-primary outline-none ring-1 ring-slate-200"
                 required
               />
 
-              <button className="w-full py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors">
+              <button className="w-full py-2 bg-brand-primary text-white rounded hover:bg-brand-primary-hover transition-colors">
                 Create Resume
               </button>
 
@@ -280,7 +254,7 @@ const Dashboard = () => {
           <form
             onSubmit={UploadResume}
             onClick={() => setShowUploadResumes(false)}
-            className="fixed inset-0 bg-black/70 backdrop-blur bg-opacity-50 z-10 flex items-center justify-center"
+            className="fixed inset-0 bg-black/70 bg-opacity-50 z-10 flex items-center justify-center"
           >
             <div
               onClick={(e) => e.stopPropagation()}
@@ -293,7 +267,7 @@ const Dashboard = () => {
                 value={title}
                 type="text"
                 placeholder="Enter resume title"
-                className="w-full px-4 py-2 mb-4 focus:border-green-600 ring-green-600"
+                className="w-full px-4 py-2 mb-4 focus:border-brand-primary focus:ring-brand-primary outline-none ring-1 ring-slate-200"
                 required
               />
 
@@ -303,9 +277,9 @@ const Dashboard = () => {
                   className="block text-sm text-slate-700"
                 >
                   Select resume file
-                  <div className="flex flex-col items-center justify-center gap-2 border group text-slate-400 border-slate-400 border-dashed rounded-md p-4 py-10 my-4 hover:border-green-500 hover:text-green-700 cursor-pointer transition-colors">
+                  <div className="flex flex-col items-center justify-center gap-2 border group text-slate-400 border-slate-400 border-dashed rounded-md p-4 py-10 my-4 hover:border-brand-primary hover:text-brand-primary cursor-pointer transition-colors">
                     {resume ? (
-                      <p className="text-green-700">{resume.name}</p>
+                      <p className="text-brand-primary">{resume.name}</p>
                     ) : (
                       <>
                         <UploadCloud className="size-14 stroke-1" />
@@ -326,7 +300,7 @@ const Dashboard = () => {
 
               <button
               disabled={isLoading}
-              className="w-full py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors flex items-center justify-center gap-2">
+              className="w-full py-2 bg-brand-primary text-white rounded hover:bg-brand-primary-hover transition-colors flex items-center justify-center gap-2">
                 {isLoading && (
                   <LoaderCircleIcon className="animate-spin size-4 text-white" />
                 )}
@@ -362,11 +336,11 @@ const Dashboard = () => {
                 value={title}
                 type="text"
                 placeholder="Enter resume title"
-                className="w-full px-4 py-2 mb-4 focus:border-green-600 ring-green-600"
+                className="w-full px-4 py-2 mb-4 focus:border-brand-primary focus:ring-brand-primary outline-none ring-1 ring-slate-200"
                 required
               />
 
-              <button className="w-full py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors">
+              <button className="w-full py-2 bg-brand-primary text-white rounded hover:bg-brand-primary-hover transition-colors">
                 Update
               </button>
 

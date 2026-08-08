@@ -1,5 +1,4 @@
 import { GraduationCap, Plus, Trash2 } from "lucide-react";
-import React from "react";
 
 const EducationForm = ({ data, onChange }) => {
   const addEducation = () => {
@@ -43,7 +42,7 @@ const EducationForm = ({ data, onChange }) => {
 
         <button
           onClick={addEducation}
-          className="flex items-center gap-2 px-3 py-1 text-sm bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition-colors"
+          className="flex items-center gap-2 px-3 py-1 text-sm bg-brand-light text-brand-primary rounded-lg hover:bg-brand-primary/20 transition-colors"
         >
           <Plus className="size-4" />
           Add Education
@@ -84,7 +83,7 @@ const EducationForm = ({ data, onChange }) => {
                   }
                   type="text"
                   placeholder="Institution Name"
-                  className="px-3 py-2 text-sm rounded-lg border border-gray-300 outline-none focus:ring-2 focus:ring-green-500"
+                  className="px-3 py-2 text-sm rounded-lg border border-gray-300 outline-none focus:ring-2 focus:ring-brand-primary/30"
                 />
 
                 <input
@@ -94,7 +93,7 @@ const EducationForm = ({ data, onChange }) => {
                   }
                   type="text"
                   placeholder="Degree (e.g., Bachelor's, Master's)"
-                  className="px-3 py-2 text-sm rounded-lg border border-gray-300 outline-none focus:ring-2 focus:ring-green-500"
+                  className="px-3 py-2 text-sm rounded-lg border border-gray-300 outline-none focus:ring-2 focus:ring-brand-primary/30"
                 />
 
                 <input
@@ -104,7 +103,7 @@ const EducationForm = ({ data, onChange }) => {
                   }
                   type="text"
                   placeholder="Field of Study"
-                  className="px-3 py-2 text-sm rounded-lg border border-gray-300 outline-none focus:ring-2 focus:ring-green-500"
+                  className="px-3 py-2 text-sm rounded-lg border border-gray-300 outline-none focus:ring-2 focus:ring-brand-primary/30"
                 />
 
                 <input
@@ -113,7 +112,7 @@ const EducationForm = ({ data, onChange }) => {
                     updateEducation(index, "graduation_date", e.target.value)
                   }
                   type="month"
-                  className="px-3 py-2 text-sm rounded-lg border border-gray-300 outline-none focus:ring-2 focus:ring-green-500"
+                  className="px-3 py-2 text-sm rounded-lg border border-gray-300 outline-none focus:ring-2 focus:ring-brand-primary/30"
                 />
               </div>
 
@@ -122,7 +121,7 @@ const EducationForm = ({ data, onChange }) => {
                 onChange={(e) => updateEducation(index, "gpa", e.target.value)}
                 type="text"
                 placeholder="GPA (optional)"
-                className="w-full px-3 py-2 text-sm rounded-lg border border-gray-300 outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full px-3 py-2 text-sm rounded-lg border border-gray-300 outline-none focus:ring-2 focus:ring-brand-primary/30"
               />
             </div>
           ))}

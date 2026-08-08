@@ -1,10 +1,9 @@
 import { Briefcase, Loader2, Plus, Sparkles, Trash2 } from "lucide-react";
-import React, { useState } from "react";
+import { useState } from 'react';
 import toast from "react-hot-toast";
-import { useSelector } from "react-redux";
+import api from "../config/api";
 
 const ExperienceForm = ({ data, onChange }) => {
-  const { token } = useSelector((state) => state.auth);
   const [generatingIndex, setGeneratingIndex] = useState(-1);
 
   const addExperience = () => {
@@ -47,12 +46,7 @@ const ExperienceForm = ({ data, onChange }) => {
     try {
       const { data } = await api.post(
         "api/ai/enhance-job-desc",
-        { userContent: prompt },
-        {
-          headers: {
-            Authorization: token,
-          },
-        },
+        { userContent: prompt }
       );
 
       updateExperience(index, "description", data.enhancedContent);
@@ -76,7 +70,7 @@ const ExperienceForm = ({ data, onChange }) => {
 
         <button
           onClick={addExperience}
-          className="flex items-center gap-2 px-3 py-1 text-sm bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition-colors"
+          className="flex items-center gap-2 px-3 py-1 text-sm bg-brand-light text-brand-primary rounded-lg hover:bg-brand-primary/20 transition-colors"
         >
           <Plus className="size-4" />
           Add Experience
@@ -118,7 +112,7 @@ const ExperienceForm = ({ data, onChange }) => {
                   type="text"
                   placeholder="Company Name"
                   className="px-3 py-2 border border-gray-300 text-sm rounded-lg
-                  focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                  focus:ring-2 focus:ring-brand-primary/30 focus:border-brand-primary outline-none"
                 />
 
                 <input
@@ -129,7 +123,7 @@ const ExperienceForm = ({ data, onChange }) => {
                   type="text"
                   placeholder="Job Title"
                   className="px-3 py-2 border border-gray-300 text-sm rounded-lg
-                 focus:ring-2 focus:ring-blue-500 focus:border-blue-500      outline-none"
+                 focus:ring-2 focus:ring-brand-primary/30 focus:border-brand-primary outline-none"
                 />
 
                 <input
@@ -139,7 +133,7 @@ const ExperienceForm = ({ data, onChange }) => {
                   }
                   type="month"
                   className="px-3 py-2 border border-gray-300 text-sm rounded-lg
-                 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                 focus:ring-2 focus:ring-brand-primary/30 focus:border-brand-primary outline-none"
                 />
 
                 <input
@@ -150,7 +144,7 @@ const ExperienceForm = ({ data, onChange }) => {
                   type="month"
                   disabled={experience.is_current}
                   className="px-3 py-2 border border-gray-300 text-sm rounded-lg
-                  focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none
+                  focus:ring-2 focus:ring-brand-primary/30 focus:border-brand-primary outline-none
                  disabled:bg-gray-100"
                 />
               </div>
@@ -166,7 +160,7 @@ const ExperienceForm = ({ data, onChange }) => {
                       e.target.checked ? true : false,
                     )
                   }
-                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  className="rounded border-gray-300 text-brand-primary focus:ring-brand-primary/30"
                 />
 
                 <span className="text-sm text-gray-700">
@@ -208,8 +202,8 @@ const ExperienceForm = ({ data, onChange }) => {
                   }
                   rows={4}
                   className="w-full text-sm px-3 py-2 border border-gray-300
-    rounded-lg resize-none focus:ring-2 focus:ring-blue-500
-    focus:border-blue-500 outline-none"
+    rounded-lg resize-none focus:ring-2 focus:ring-brand-primary/30
+    focus:border-brand-primary outline-none"
                   placeholder="Describe your key responsibilities and achievements..."
                 />
               </div>

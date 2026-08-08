@@ -248,7 +248,14 @@ export const uploadResume = async (req, res) => {
 
     const extractedData = response.choices[0].message.content;
 
-    const parsedData = JSON.parse(extractedData);
+    let parsedData;
+    try {
+      parsedData = JSON.parse(extractedData);
+    } catch (e) {
+      return res.status(500).json({
+        message: 'AI returned malformed data, please try again.'
+      });
+    }
 
     const newResume = await Resume.create({
       userId,

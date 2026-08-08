@@ -1,4 +1,3 @@
-import React from "react";
 
 import ClassicTemplate from "./templates/ClassicTemplate";
 import ModernTemplate from "./templates/ModernTemplate";

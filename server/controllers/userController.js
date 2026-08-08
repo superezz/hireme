@@ -19,13 +19,17 @@ const generateToken = (userId) => {
 
 export const registerUser = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
-
-    //check if required field are prasent
+    let { name, email, password } = req.body;
 
     if (!name || !email || !password) {
-      return res.status(400).json({ message: 'Missign required fields' })
+      return res.status(400).json({ message: 'Missing required fields' })
     }
+
+    if (typeof password !== 'string' || password.length < 8) {
+      return res.status(400).json({ message: 'Password must be at least 8 characters long' })
+    }
+
+    email = email.toLowerCase().trim();
 
     //check if user already exists
     const user = await User.findOne({ email })
@@ -65,10 +69,16 @@ export const registerUser = async (req, res) => {
 
 export const loginUser = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    let { email, password } = req.body;
 
-    // check if user exists
-    const user = await User.findOne({ email });
+    if (!email || !password || typeof password !== 'string') {
+      return res.status(400).json({ message: 'Invalid email or password' });
+    }
+
+    email = email.toLowerCase().trim();
+
+    // check if user exists, explicitly selecting password since it is excluded by default
+    const user = await User.findOne({ email }).select('+password');
 
     if (!user) {
       return res.status(400).json({

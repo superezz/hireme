@@ -1,11 +1,16 @@
 import jwt from 'jsonwebtoken'
 
 const protect = async (req, res, next) => {
-  const token = req.headers.authorization;
+  let token = req.headers.authorization;
+
+  if (token && token.startsWith('Bearer ')) {
+    token = token.split(' ')[1];
+  }
 
   if (!token) {
     return res.status(401).json({
-      message: 'Unauthorized'
+      success: false,
+      message: 'Unauthorized - No token provided'
     });
   }
 
@@ -18,7 +23,8 @@ const protect = async (req, res, next) => {
 
   } catch (error) {
     return res.status(401).json({
-      message: 'Unauthorized'
+      success: false,
+      message: 'Unauthorized - Invalid or expired token'
     });
   }
 }
