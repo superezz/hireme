@@ -17,7 +17,7 @@ const generateToken = (userId) => {
   return token
 }
 
-export const registerUser = async (req, res) => {
+export const registerUser = async (req, res, next) => {
   try {
     let { name, email, password } = req.body;
 
@@ -25,8 +25,9 @@ export const registerUser = async (req, res) => {
       return res.status(400).json({ message: 'Missing required fields' })
     }
 
-    if (typeof password !== 'string' || password.length < 8) {
-      return res.status(400).json({ message: 'Password must be at least 8 characters long' })
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+    if (!passwordRegex.test(password)) {
+      return res.status(400).json({ message: 'Password must be at least 8 characters long and contain at least one letter, one number, and one special character.' })
     }
 
     email = email.toLowerCase().trim();
@@ -52,14 +53,20 @@ export const registerUser = async (req, res) => {
 
     newUser.password = undefined;
 
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+    });
+
     return res.status(201).json({
       message: 'User created successfully',
-      token,
       user: newUser
     });
 
   } catch (error) {
-    return res.status(400).json({ message: error.message })
+    next(error);
   }
 }
 
@@ -67,7 +74,7 @@ export const registerUser = async (req, res) => {
 //controller for user login
 // POST: /api/user/login
 
-export const loginUser = async (req, res) => {
+export const loginUser = async (req, res, next) => {
   try {
     let { email, password } = req.body;
 
@@ -87,7 +94,8 @@ export const loginUser = async (req, res) => {
     }
 
     // check if password is correct
-    if (!user.comparePassword(password)) {
+    const isPasswordValid = await user.comparePassword(password);
+    if (!isPasswordValid) {
       return res.status(400).json({
         message: 'Invalid email or password'
       });
@@ -98,14 +106,20 @@ export const loginUser = async (req, res) => {
 
     user.password = undefined;
 
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+    });
+
     return res.status(200).json({
       message: 'User login successfully',
-      token,
       user
     });
 
   } catch (error) {
-    return res.status(400).json({ message: error.message })
+    next(error);
   }
 }
 
@@ -113,7 +127,7 @@ export const loginUser = async (req, res) => {
 // controller for getting user by id
 // GET: /api/users/data
 
-export const getUserById = async (req, res) => {
+export const getUserById = async (req, res, next) => {
   try {
 
     const userId = req.userId;
@@ -133,9 +147,7 @@ export const getUserById = async (req, res) => {
     return res.status(200).json({ user });
 
   } catch (error) {
-    return res.status(400).json({
-      message: error.message
-    });
+    next(error);
   }
 }
 
@@ -144,7 +156,7 @@ export const getUserById = async (req, res) => {
 // controller for getting user resumes
 // GET: /api/users/resumes
 
-export const getUserResumes = async (req, res) => {
+export const getUserResumes = async (req, res, next) => {
   try {
 
     const userId = req.userId;
@@ -155,8 +167,20 @@ export const getUserResumes = async (req, res) => {
     return res.status(200).json({ resumes });
 
   } catch (error) {
-    return res.status(400).json({
-      message: error.message
-    });
+    next(error);
   }
 }
+
+// controller for user logout
+// POST: /api/users/logout
+export const logoutUser = async (req, res, next) => {
+  try {
+    res.cookie('token', '', {
+      httpOnly: true,
+      expires: new Date(0)
+    });
+    res.status(200).json({ message: 'Logged out successfully' });
+  } catch (error) {
+    next(error);
+  }
+};

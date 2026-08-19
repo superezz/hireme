@@ -26,6 +26,7 @@ const Dashboard = () => {
   const [editResumeId, setEditResumeId] = useState("");
 
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingResumes, setIsLoadingResumes] = useState(true);
   const navigate = useNavigate();
 
   const createResume = async (event) => {
@@ -118,10 +119,11 @@ const Dashboard = () => {
     const loadAllResumes = async () => {
       try {
         const { data } = await api.get("/api/users/resumes");
-
         setAllResumes(data.resumes);
       } catch (error) {
         toast.error(error?.response?.data?.message || error.message);
+      } finally {
+        setIsLoadingResumes(false);
       }
     };
     loadAllResumes();
@@ -159,60 +161,86 @@ const Dashboard = () => {
         </div>
 
         <hr className="border-slate-300 my-6 sm:w-[305px]" />
-        <div className="grid grid-cols-2 sm:flex flex-wrap gap-4">
-          {allResumes.map((resume, index) => {
-            const baseColor = colors[index % colors.length];
+        
+        {isLoadingResumes ? (
+          <div className="grid grid-cols-2 sm:flex flex-wrap gap-4">
+            {[1, 2, 3].map((n) => (
+              <div key={n} className="w-full sm:max-w-36 h-48 rounded-lg border border-slate-200 bg-slate-100 animate-pulse flex flex-col items-center justify-center gap-2">
+                <div className="w-8 h-8 rounded-full bg-slate-200"></div>
+                <div className="w-20 h-3 rounded bg-slate-200"></div>
+              </div>
+            ))}
+          </div>
+        ) : allResumes.length === 0 ? (
+          <div className="text-center py-10 mt-6 border-2 border-dashed border-slate-200 rounded-xl bg-slate-50/50">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-indigo-50 mb-4">
+              <FilePenLineIcon className="size-8 text-indigo-500" />
+            </div>
+            <h3 className="text-lg font-medium text-slate-800">No resumes yet</h3>
+            <p className="text-slate-500 mt-1 mb-6 text-sm">Create your first resume to get started!</p>
+            <button
+              onClick={() => setShowCreateResumes(true)}
+              className="bg-brand-primary text-white px-6 py-2 rounded-full text-sm hover:opacity-90 transition-opacity"
+            >
+              Create Resume
+            </button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 sm:flex flex-wrap gap-4">
+            {allResumes.map((resume, index) => {
+              const baseColor = colors[index % colors.length];
 
-            return (
-              <button
-                key={index}
-                onClick={() => navigate(`/app/builder/${resume._id}`)}
-                className="relative w-full sm:max-w-36 h-48 flex flex-col items-center justify-center rounded-lg gap-2 border group hover:shadow-lg transition-all duration-300 cursor-pointer"
-                style={{
-                  background: `linear-gradient(135deg, ${baseColor}10, ${baseColor}40)`,
-                  borderColor: baseColor + "40",
-                }}
-              >
-                <FilePenLineIcon
-                  className="size-7 group-hover:scale-105 transition-all"
-                  style={{ color: baseColor }}
-                />
-
-                <p
-                  className="text-sm group-hover:scale-105 transition-all px-2 text-center"
-                  style={{ color: baseColor }}
+              return (
+                <button
+                  key={index}
+                  onClick={() => navigate(`/app/builder/${resume._id}`)}
+                  className="relative w-full sm:max-w-36 h-48 flex flex-col items-center justify-center rounded-lg gap-2 border group hover:shadow-lg transition-all duration-300 cursor-pointer"
+                  style={{
+                    background: `linear-gradient(135deg, ${baseColor}10, ${baseColor}40)`,
+                    borderColor: baseColor + "40",
+                  }}
                 >
-                  {resume.title}
-                </p>
-
-                <p
-                  className="absolute bottom-1 text-[11px] text-slate-400 group-hover:text-slate-500 transition-all duration-300 px-2 text-center"
-                  style={{ color: baseColor + "90" }}
-                >
-                  Updated on {new Date(resume.updatedAt).toLocaleDateString()}
-                </p>
-
-                <div
-                  onClick={(e) => e.stopPropagation()}
-                  className="absolute top-1 right-1 group-hover:flex items-center hidden"
-                >
-                  <TrashIcon
-                    onClick={() => deleteResume(resume._id)}
-                    className="size-7 p-1.5 hover:bg-white/50 rounded text-slate-700 transition-colors"
+                  <FilePenLineIcon
+                    className="size-7 group-hover:scale-105 transition-all"
+                    style={{ color: baseColor }}
                   />
 
-                  <PencilIcon
-                    onClick={() => {
-                      setEditResumeId(resume._id);
-                      setTitle(resume.title);
-                    }}
-                    className="size-7 p-1.5 hover:bg-white/50 rounded text-slate-700 transition-colors"
-                  />
-                </div>
-              </button>
-            );
-          })}
-        </div>
+                  <p
+                    className="text-sm group-hover:scale-105 transition-all px-2 text-center"
+                    style={{ color: baseColor }}
+                  >
+                    {resume.title}
+                  </p>
+
+                  <p
+                    className="absolute bottom-1 text-[11px] text-slate-400 group-hover:text-slate-500 transition-all duration-300 px-2 text-center"
+                    style={{ color: baseColor + "90" }}
+                  >
+                    Updated on {new Date(resume.updatedAt).toLocaleDateString()}
+                  </p>
+
+                  <div
+                    onClick={(e) => e.stopPropagation()}
+                    className="absolute top-1 right-1 group-hover:flex items-center hidden"
+                  >
+                    <TrashIcon
+                      onClick={() => deleteResume(resume._id)}
+                      className="size-7 p-1.5 hover:bg-white/50 rounded text-slate-700 transition-colors"
+                    />
+
+                    <PencilIcon
+                      onClick={() => {
+                        setEditResumeId(resume._id);
+                        setTitle(resume.title);
+                      }}
+                      className="size-7 p-1.5 hover:bg-white/50 rounded text-slate-700 transition-colors"
+                    />
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        )}
 
         {showCreateResumes && (
           <form

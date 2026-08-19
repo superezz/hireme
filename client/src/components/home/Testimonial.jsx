@@ -1,6 +1,6 @@
 import Title from "./Title";
 import { BookUserIcon } from "lucide-react";
-import { Reveal } from "./Reveal";
+import { motion } from "framer-motion";
 
 const Testimonials = () => {
   const testimonials = [
@@ -42,51 +42,64 @@ const Testimonials = () => {
     }
   ];
 
-  return (
-    <div id="testimonials" className="flex flex-col items-center my-24 scroll-mt-24 px-4">
-      <Reveal delay={0.1}>
-        <div className="flex flex-col items-center">
-          <div className="flex items-center gap-2 text-sm text-brand-primary bg-brand-light border border-brand-primary/20 rounded-full px-4 py-1.5 mb-2">
-            <BookUserIcon className="size-4" />
-            <span className="font-medium">Testimonials</span>
-          </div>
-          <Title
-            title="Success Stories"
-            description="See how our templates and AI tools are helping job seekers stand out."
-          />
-        </div>
-      </Reveal>
+  // Duplicate for seamless loop
+  const marqueeItems = [...testimonials, ...testimonials];
 
-      <section className="flex flex-col items-start max-w-6xl w-full mx-auto mt-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
-          {testimonials.map((testimonial, index) => (
-            <Reveal delay={0.2 + index * 0.1} key={index}>
-              <div className="h-full bg-white border border-slate-200 p-8 rounded-2xl hover:-translate-y-1 hover:shadow-lg hover:border-brand-primary transition-all duration-300 flex flex-col justify-between">
-                <p className="text-base text-slate-600 leading-relaxed mb-8">
-                  "{testimonial.quote}"
-                </p>
-                <div className="flex items-center gap-4">
-                  <img
-                    className="size-12 rounded-full object-cover border border-slate-100 shadow-sm"
-                    src={testimonial.avatar}
-                    alt={testimonial.name}
-                  />
-                  <div>
-                    <h2 className="flex items-center gap-1.5 text-base text-brand-navy font-medium">
-                      {testimonial.name}
-                      <svg width="16" height="16" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path fillRule="evenodd" clipRule="evenodd" d="M10.7801 5.89736C11.0185 5.65898 11.0185 5.2725 10.7801 5.03412C10.5418 4.79575 10.1552 4.79575 9.91688 5.03412L6.27923 8.6718L5.0831 7.4757C4.84472 7.23735 4.45824 7.23735 4.21987 7.4757C3.9815 7.71405 3.9815 8.10053 4.21987 8.33895L5.84759 9.96668C6.08595 10.205 6.47243 10.205 6.71085 9.96668L10.7801 5.89736Z" fill="#16a34a"/>
-                        <path fillRule="evenodd" clipRule="evenodd" d="M5.6943 0.900204C5.51166 1.05585 5.42033 1.13369 5.3228 1.19906C5.09922 1.34891 4.84813 1.45291 4.58408 1.50504C4.46888 1.52779 4.34927 1.53733 4.11006 1.55642C3.50903 1.60439 3.2085 1.62836 2.95778 1.71692C2.37788 1.92175 1.92175 2.37788 1.71692 2.95778C1.62836 3.2085 1.60439 3.50903 1.55642 4.11006C1.53733 4.34927 1.52779 4.46888 1.50504 4.58408C1.45291 4.84813 1.34891 5.09922 1.19906 5.3228C1.13369 5.42033 1.05586 5.51165 0.900204 5.6943C0.509124 6.15323 0.313577 6.38265 0.198917 6.62258C-0.0663056 7.1775 -0.0663056 7.8225 0.198917 8.37743C0.313584 8.61735 0.509124 8.84678 0.900204 9.3057C1.05584 9.48833 1.13369 9.57968 1.19906 9.67718C1.34891 9.90075 1.45291 10.1519 1.50504 10.4159C1.52779 10.5311 1.53733 10.6508 1.55642 10.8899C1.60439 11.491 1.62836 11.7915 1.71692 12.0422C1.92175 12.6221 2.37788 13.0783 2.95778 13.2831C3.2085 13.3716 3.50903 13.3956 4.11006 13.4436C4.34927 13.4627 4.46888 13.4722 4.58408 13.495C4.84813 13.5471 5.09922 13.6511 5.3228 13.801C5.42033 13.8663 5.51165 13.9441 5.6943 14.0998C6.15323 14.4909 6.38265 14.6864 6.62258 14.8011C7.1775 15.0663 7.8225 15.0663 8.37743 14.8011C8.61735 14.6864 8.84678 14.4909 9.3057 14.0998C9.48833 13.9441 9.57968 13.8663 9.67718 13.801C9.90075 13.6511 10.1519 13.5471 10.4159 13.495C10.5311 13.4722 10.6508 13.4627 10.8899 13.4436C11.491 13.3956 11.7915 13.3716 12.0422 13.2831C12.6221 13.0783 13.0783 12.6221 13.2831 12.0422C13.3716 11.7915 13.3956 11.491 13.4436 10.8899C13.4627 10.6508 13.4722 10.5311 13.495 10.4159C13.5471 10.1519 13.6511 9.90075 13.801 9.67718C13.8663 9.57968 13.9441 9.48833 14.0998 9.3057C14.4909 8.84678 14.6864 8.61735 14.8011 8.37743C15.0663 7.8225 15.0663 7.1775 14.8011 6.62258C14.6864 6.38265 14.4909 6.15323 14.0998 5.6943C13.9441 5.51165 13.8663 5.42033 13.801 5.3228C13.6511 5.09922 13.5471 4.84813 13.495 4.58408C13.4722 4.46888 13.4627 4.34927 13.4436 4.11006C13.3956 3.50903 13.3716 3.2085 13.2831 2.95778C13.0783 2.37788 12.6221 1.92175 12.0422 1.71692C11.7915 1.62836 11.491 1.60439 10.8899 1.55642C10.6508 1.53733 10.5311 1.52779 10.4159 1.50504C10.1519 1.45291 9.90075 1.34891 9.67718 1.19906C9.57968 1.13369 9.48833 1.05586 9.3057 0.900204C8.84678 0.509124 8.61735 0.313584 8.37743 0.198917C7.8225 -0.0663056 7.1775 -0.0663056 6.62258 0.198917C6.38265 0.313577 6.15323 0.509124 5.6943 0.900204ZM10.7801 5.89736C11.0185 5.65898 11.0185 5.2725 10.7801 5.03412C10.5418 4.79575 10.1552 4.79575 9.91688 5.03412L6.27923 8.6718L5.0831 7.4757C4.84472 7.23735 4.45824 7.23735 4.21987 7.4757C3.9815 7.71405 3.9815 8.10053 4.21987 8.33895L5.84759 9.96668C6.08595 10.205 6.47243 10.205 6.71085 9.96668L10.7801 5.89736Z" fill="#bbf7d0"/>
-                      </svg>
-                    </h2>
-                    <p className="text-[13px] text-slate-500">{testimonial.role}</p>
-                  </div>
+  return (
+    <div id="testimonials" className="flex flex-col items-center py-24 bg-[#030712] overflow-hidden">
+      
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        className="flex flex-col items-center z-10 px-4"
+      >
+        <div className="flex items-center gap-2 text-sm text-brand-primary bg-brand-primary/10 border border-brand-primary/20 rounded-full px-4 py-1.5 mb-6">
+          <BookUserIcon className="size-4" />
+          <span className="font-medium">Loved by thousands</span>
+        </div>
+        <Title
+          title="Don't just take our word for it"
+          description="See how our platform is transforming careers and helping job seekers stand out."
+        />
+      </motion.div>
+
+      <div className="relative flex w-full max-w-[100vw] mt-16 overflow-hidden">
+        
+        {/* Left/Right Fades */}
+        <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-[#030712] to-transparent z-10 pointer-events-none"></div>
+        <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-[#030712] to-transparent z-10 pointer-events-none"></div>
+
+        {/* Marquee Track */}
+        <div className="flex w-max animate-marquee gap-6 py-4 px-3 hover:[animation-play-state:paused]">
+          {marqueeItems.map((testimonial, index) => (
+            <div 
+              key={index} 
+              className="w-[350px] shrink-0 bg-white/5 border border-white/10 p-8 rounded-3xl hover:bg-white/10 transition-colors duration-300 flex flex-col justify-between"
+            >
+              <p className="text-base text-slate-300 leading-relaxed mb-8">
+                "{testimonial.quote}"
+              </p>
+              <div className="flex items-center gap-4">
+                <img
+                  className="size-12 rounded-full object-cover border border-white/10"
+                  src={testimonial.avatar}
+                  alt={testimonial.name}
+                />
+                <div>
+                  <h2 className="flex items-center gap-1.5 text-base text-white font-medium">
+                    {testimonial.name}
+                    <svg width="16" height="16" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path fillRule="evenodd" clipRule="evenodd" d="M10.7801 5.89736C11.0185 5.65898 11.0185 5.2725 10.7801 5.03412C10.5418 4.79575 10.1552 4.79575 9.91688 5.03412L6.27923 8.6718L5.0831 7.4757C4.84472 7.23735 4.45824 7.23735 4.21987 7.4757C3.9815 7.71405 3.9815 8.10053 4.21987 8.33895L5.84759 9.96668C6.08595 10.205 6.47243 10.205 6.71085 9.96668L10.7801 5.89736Z" fill="#16a34a"/>
+                    </svg>
+                  </h2>
+                  <p className="text-[13px] text-slate-500">{testimonial.role}</p>
                 </div>
               </div>
-            </Reveal>
+            </div>
           ))}
         </div>
-      </section>
+      </div>
     </div>
   );
 };

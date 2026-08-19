@@ -1,56 +1,56 @@
 
 const Footer = () => {
   return (
-    <footer className="flex flex-wrap justify-center lg:justify-between overflow-hidden gap-10 md:gap-20 py-16 px-6 md:px-16 lg:px-24 xl:px-32 text-[13px] text-slate-500 bg-brand-subtle border-t border-slate-100 mt-20">
+    <footer className="relative flex flex-wrap justify-center lg:justify-between overflow-hidden gap-10 md:gap-20 py-16 px-6 md:px-16 lg:px-24 xl:px-32 text-[13px] text-slate-500 bg-[#030712] border-t border-white/10 z-10">
       <div className="flex flex-wrap items-start gap-10 md:gap-[60px] xl:gap-[140px]">
         <a href="https://superezz.com">
           <img src="/viewme-logo.png" alt="ViewMe" className="h-10 w-auto object-contain" />
         </a>
         <div>
-          <p className="text-brand-navy font-semibold mb-4">Product</p>
+          <p className="text-white font-semibold mb-4 text-sm">Product</p>
           <ul className="space-y-3">
             <li>
-              <a href="/" className="hover:text-brand-primary transition-colors duration-200">
+              <a href="/" className="hover:text-white transition-colors duration-200">
                 Home
               </a>
             </li>
             <li>
-              <a href="/" className="hover:text-brand-primary transition-colors duration-200">
+              <a href="/" className="hover:text-white transition-colors duration-200">
                 Support
               </a>
             </li>
             <li>
-              <a href="/" className="hover:text-brand-primary transition-colors duration-200">
+              <a href="/" className="hover:text-white transition-colors duration-200">
                 Pricing
               </a>
             </li>
             <li>
-              <a href="/" className="hover:text-brand-primary transition-colors duration-200">
+              <a href="/" className="hover:text-white transition-colors duration-200">
                 Affiliate
               </a>
             </li>
           </ul>
         </div>
         <div>
-          <p className="text-brand-navy font-semibold mb-4">Resources</p>
+          <p className="text-white font-semibold mb-4 text-sm">Resources</p>
           <ul className="space-y-3">
             <li>
-              <a href="/" className="hover:text-brand-primary transition-colors duration-200">
+              <a href="/" className="hover:text-white transition-colors duration-200">
                 Company
               </a>
             </li>
             <li>
-              <a href="/" className="hover:text-brand-primary transition-colors duration-200">
+              <a href="/" className="hover:text-white transition-colors duration-200">
                 Blogs
               </a>
             </li>
             <li>
-              <a href="/" className="hover:text-brand-primary transition-colors duration-200">
+              <a href="/" className="hover:text-white transition-colors duration-200">
                 Community
               </a>
             </li>
             <li>
-              <a href="/" className="flex items-center hover:text-brand-primary transition-colors duration-200">
+              <a href="/" className="flex items-center hover:text-white transition-colors duration-200">
                 Careers
                 <span className="text-[10px] uppercase font-bold text-white bg-brand-primary rounded ml-2 px-1.5 py-0.5">
                   Hiring
@@ -58,22 +58,22 @@ const Footer = () => {
               </a>
             </li>
             <li>
-              <a href="/" className="hover:text-brand-primary transition-colors duration-200">
+              <a href="/" className="hover:text-white transition-colors duration-200">
                 About
               </a>
             </li>
           </ul>
         </div>
         <div>
-          <p className="text-brand-navy font-semibold mb-4">Legal</p>
+          <p className="text-white font-semibold mb-4 text-sm">Legal</p>
           <ul className="space-y-3">
             <li>
-              <a href="/" className="hover:text-brand-primary transition-colors duration-200">
+              <a href="/" className="hover:text-white transition-colors duration-200">
                 Privacy
               </a>
             </li>
             <li>
-              <a href="/" className="hover:text-brand-primary transition-colors duration-200">
+              <a href="/" className="hover:text-white transition-colors duration-200">
                 Terms
               </a>
             </li>
@@ -85,7 +85,7 @@ const Footer = () => {
           Building professional resumes that help you stand out and land your dream job.
         </p>
         <div className="flex items-center gap-4 mt-2">
-          <a href="https://dribbble.com" target="_blank" rel="noreferrer" className="text-slate-400 hover:text-brand-primary hover:-translate-y-0.5 transition-all duration-200">
+          <a href="https://dribbble.com" target="_blank" rel="noreferrer" className="text-slate-400 hover:text-white hover:-translate-y-0.5 transition-all duration-200">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -109,7 +109,7 @@ const Footer = () => {
             href="https://www.linkedin.com/in/superezz"
             target="_blank"
             rel="noreferrer"
-            className="text-slate-400 hover:text-brand-primary hover:-translate-y-0.5 transition-all duration-200"
+            className="text-slate-400 hover:text-white hover:-translate-y-0.5 transition-all duration-200"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -129,7 +129,7 @@ const Footer = () => {
               <circle cx="4" cy="4" r="2"></circle>
             </svg>
           </a>
-          <a href="https://x.com/superezz" target="_blank" rel="noreferrer" className="text-slate-400 hover:text-brand-primary hover:-translate-y-0.5 transition-all duration-200">
+          <a href="https://x.com/superezz" target="_blank" rel="noreferrer" className="text-slate-400 hover:text-white hover:-translate-y-0.5 transition-all duration-200">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -150,7 +150,7 @@ const Footer = () => {
             href="https://www.youtube.com/@supereezz"
             target="_blank"
             rel="noreferrer"
-            className="text-slate-400 hover:text-brand-primary hover:-translate-y-0.5 transition-all duration-200"
+            className="text-slate-400 hover:text-white hover:-translate-y-0.5 transition-all duration-200"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -170,8 +170,8 @@ const Footer = () => {
             </svg>
           </a>
         </div>
-        <p className="mt-4 text-center text-slate-400">
-          © 2025 <a href="https://superezz.com" className="hover:text-slate-600 transition-colors">SUPEREZZ</a>. All rights reserved.
+        <p className="mt-4 text-center text-slate-500">
+          © 2025 <a href="https://superezz.com" className="hover:text-white transition-colors">SUPEREZZ</a>. All rights reserved.
         </p>
       </div>
     </footer>

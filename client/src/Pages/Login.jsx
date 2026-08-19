@@ -23,7 +23,7 @@ const Login = () => {
     try {
       const { data } = await api.post(`/api/users/${state}`, formData);
       dispatch(login(data));
-      localStorage.setItem("token", data.token);
+
 
       toast.success(data.message);
     } catch (error) {

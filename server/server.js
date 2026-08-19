@@ -7,6 +7,8 @@ import connectDB from "./config/db.js";
 import userRouter from "./routes/userRoutes.js";
 import resumeRouter from "./routes/resumeRoutes.js";
 import aiRouter from "./routes/aiRoutes.js";
+import cookieParser from "cookie-parser";
+import { errorHandler } from "./middlewares/errorMiddleware.js";
 
 const requiredEnvVars = ['JWT_SECRET', 'GEMINI_API_KEY', 'CLIENT_URL'];
 for (const envVar of requiredEnvVars) {
@@ -20,6 +22,7 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 app.use(helmet());
+app.use(cookieParser());
 app.use(express.json());
 app.use(cors({
   origin: process.env.CLIENT_URL,
@@ -33,6 +36,7 @@ app.use('/api/users', userRouter)
 app.use('/api/resumes', resumeRouter)
 app.use('/api/ai', aiRouter)
 
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
