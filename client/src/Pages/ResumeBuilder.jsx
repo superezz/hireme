@@ -46,6 +46,7 @@ const ResumeBuilder = () => {
 
   const [activeSectionIndex, setActiveSectionIndex] = useState(0);
   const [removeBackground, setRemoveBackground] = useState(false);
+  const [mobileView, setMobileView] = useState("form"); // "form" or "preview"
 
   const sections = [
     { id: "personal", name: "Personal Info", icon: User },
@@ -160,7 +161,7 @@ const ResumeBuilder = () => {
       <div className="max-w-7xl mx-auto px-4 pb-8">
         <div className="grid lg:grid-cols-12 gap-8">
           {/* Left Panel - Form */}
-          <div className="relative lg:col-span-5 rounded-lg overflow-hidden">
+          <div className={`relative lg:col-span-5 rounded-lg overflow-hidden ${mobileView === 'preview' ? 'hidden lg:block' : 'block'}`}>
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 pt-1">
               {/* progress bar using activeSectionIndex */}
               <hr className="absolute top-0 left-0 right-0 border-2 border-gray-200" />
@@ -324,7 +325,7 @@ const ResumeBuilder = () => {
           </div>
 
           {/* Right Panel - Preview */}
-          <div className="lg:col-span-7 max-lg:mt-6">
+          <div className={`lg:col-span-7 max-lg:mt-6 ${mobileView === 'form' ? 'hidden lg:block' : 'block'}`}>
             <div className="relative w-full">
               <div className="absolute bottom-3 left-0 right-0 flex items-center justify-end gap-2">
                 {resumeData.public && (
@@ -365,6 +366,24 @@ const ResumeBuilder = () => {
               accentColor={resumeData.accent_color}
             />
           </div>
+        </div>
+      </div>
+
+      {/* Mobile Toggle Button */}
+      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 lg:hidden z-50">
+        <div className="bg-slate-800 text-white rounded-full flex items-center p-1 shadow-xl">
+          <button
+            onClick={() => setMobileView("form")}
+            className={`px-4 py-2 text-sm font-medium rounded-full transition-colors ${mobileView === "form" ? "bg-brand-primary" : "hover:text-brand-primary"}`}
+          >
+            Edit
+          </button>
+          <button
+            onClick={() => setMobileView("preview")}
+            className={`px-4 py-2 text-sm font-medium rounded-full transition-colors ${mobileView === "preview" ? "bg-brand-primary" : "hover:text-brand-primary"}`}
+          >
+            Preview
+          </button>
         </div>
       </div>
     </div>

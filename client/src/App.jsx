@@ -16,22 +16,16 @@ export const App = () => {
 
   useEffect(() => {
     const getUserData = async () => {
-      const token = localStorage.getItem("token");
       try {
-        if (token) {
-          const { data } = await api.get("/api/users/data");
+        const { data } = await api.get("/api/users/data");
 
-          if (data.user) {
-            dispatch(login({ token, user: data.user }));
-          }
-
-          dispatch(setLoading(false));
-        } else {
-          dispatch(setLoading(false));
+        if (data?.user) {
+          dispatch(login({ user: data.user }));
         }
       } catch (error) {
-        dispatch(setLoading(false));
         console.log(error.message);
+      } finally {
+        dispatch(setLoading(false));
       }
     };
 

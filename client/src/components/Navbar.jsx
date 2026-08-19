@@ -1,15 +1,21 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { logout } from "../app/features/authSlice";
+import api from "../config/api";
 
 const Navbar = () => {
   const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const logoutUser = () => {
-    navigate("/");
+  const logoutUser = async () => {
+    try {
+      await api.post("/api/users/logout");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
     dispatch(logout());
+    navigate("/");
   };
 
   return (

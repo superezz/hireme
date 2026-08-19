@@ -4,10 +4,12 @@ import {
   getUserById,
   getUserResumes,
   loginUser,
-  registerUser
+  registerUser,
+  logoutUser
 } from '../controllers/userController.js';
 
 import protect from '../middlewares/authMiddlewares.js';
+import { validate, registerValidation, loginValidation } from '../middlewares/validationMiddleware.js';
 
 const userRouter = express.Router();
 
@@ -17,8 +19,9 @@ const authLimiter = rateLimit({
   message: { message: 'Too many authentication attempts from this IP, please try again later.' }
 });
 
-userRouter.post('/register', authLimiter, registerUser);
-userRouter.post('/login', authLimiter, loginUser);
+userRouter.post('/register', authLimiter, registerValidation, validate, registerUser);
+userRouter.post('/login', authLimiter, loginValidation, validate, loginUser);
+userRouter.post('/logout', logoutUser);
 userRouter.get('/data', protect, getUserById);
 userRouter.get('/resumes', protect, getUserResumes)
 

@@ -25,12 +25,12 @@ const Banner = () => {
       variants={bannerVariants}
       initial="hidden"
       animate="visible"
-      className="w-full py-2.5 font-medium text-sm text-brand-navy text-center bg-brand-light border-b border-brand-primary/10"
+      className="relative z-50 w-full py-2.5 font-medium text-sm text-slate-300 text-center bg-[#02040a] border-b border-white/10"
     >
       <p className="flex items-center justify-center">
         <motion.span
           variants={badgeVariants}
-          className="px-3 py-1 rounded-lg text-white bg-brand-primary mr-3 text-xs tracking-wide"
+          className="px-3 py-1 rounded-full text-white bg-brand-primary mr-3 text-xs tracking-wide shadow-[0_0_10px_rgba(82,69,255,0.5)]"
         >
           New
         </motion.span>

@@ -5,7 +5,7 @@ import fs from 'fs';
 
 // controller for creating a new resume
 // POST: /api/resumes/create
-export const createResume = async (req, res) => {
+export const createResume = async (req, res, next) => {
   try {
 
     const userId = req.userId;
@@ -21,9 +21,7 @@ export const createResume = async (req, res) => {
     });
 
   } catch (error) {
-    return res.status(400).json({
-      message: error.message
-    });
+    next(error);
   }
 }
 
@@ -31,7 +29,7 @@ export const createResume = async (req, res) => {
 // controller for deleting a resume
 // DELETE: /api/resumes/delete
 
-export const deleteResume = async (req, res) => {
+export const deleteResume = async (req, res, next) => {
   try {
 
     const userId = req.userId;
@@ -48,9 +46,7 @@ export const deleteResume = async (req, res) => {
     });
 
   } catch (error) {
-    return res.status(400).json({
-      message: error.message
-    });
+    next(error);
   }
 }
 
@@ -59,7 +55,7 @@ export const deleteResume = async (req, res) => {
 // get user resume by id
 // GET: /api/resumes/get
 
-export const getResumeById = async (req, res) => {
+export const getResumeById = async (req, res, next) => {
   try {
 
     const userId = req.userId;
@@ -83,9 +79,7 @@ export const getResumeById = async (req, res) => {
     return res.status(200).json({ resume });
 
   } catch (error) {
-    return res.status(400).json({
-      message: error.message
-    });
+    next(error);
   }
 }
 
@@ -94,7 +88,7 @@ export const getResumeById = async (req, res) => {
 // get resume by id public
 // GET: /api/resumes/public
 
-export const getPublicResumeById = async (req, res) => {
+export const getPublicResumeById = async (req, res, next) => {
   try {
 
     const { resumeId } = req.params;
@@ -113,9 +107,7 @@ export const getPublicResumeById = async (req, res) => {
     return res.status(200).json({ resume });
 
   } catch (error) {
-    return res.status(400).json({
-      message: error.message
-    });
+    next(error);
   }
 }
 
@@ -123,7 +115,7 @@ export const getPublicResumeById = async (req, res) => {
 // controller for updating a resume
 // PUT: /api/resumes/update
 
-export const updateResume = async (req, res) => {
+export const updateResume = async (req, res, next) => {
   try {
 
     const userId = req.userId;
@@ -140,7 +132,7 @@ export const updateResume = async (req, res) => {
 
     if (typeof resumeData === 'string') {
 
-      resumeDataCopy = await JSON.parse(resumeData)
+      resumeDataCopy = JSON.parse(resumeData)
 
     } else {
 
@@ -189,8 +181,6 @@ export const updateResume = async (req, res) => {
     });
 
   } catch (error) {
-    return res.status(400).json({
-      message: error.message
-    });
+    next(error);
   }
 }

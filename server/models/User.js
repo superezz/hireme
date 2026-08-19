@@ -14,9 +14,9 @@ const UserSchema = new mongoose.Schema({
   password: { type: String, required: true, select: false },
 }, { timestamps: true })
 
-UserSchema.methods.comparePassword = function (password) {
+UserSchema.methods.comparePassword = async function (password) {
   if (!password) return false;
-  return bcrypt.compareSync(password, this.password)
+  return await bcrypt.compare(password, this.password);
 }
 
 const User = mongoose.model("User", UserSchema)

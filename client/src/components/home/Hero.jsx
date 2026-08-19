@@ -1,263 +1,193 @@
 import { useState, useEffect } from 'react';
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
+import { cn } from "../../lib/utils";
 
 const Hero = () => {
   const { user } = useSelector((state) => state.auth);
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const shouldReduceMotion = useReducedMotion();
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 10);
+      setScrolled(window.scrollY > 20);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const staggerContainer = {
-    hidden: { opacity: 0 },
-    visible: {
+  const fadeUpVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: (i) => ({
       opacity: 1,
+      y: 0,
       transition: {
-        staggerChildren: 0.15,
-        delayChildren: 0.2,
+        duration: 1,
+        delay: 0.5 + i * 0.2,
+        ease: [0.25, 0.4, 0.25, 1],
       },
-    },
+    }),
   };
 
-  const fadeUp = shouldReduceMotion
-    ? { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.5 } } }
-    : { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } } };
-
   return (
-    <>
-      <div className="min-h-screen pb-20 flex flex-col">
-        {/* Navbar */}
-        <motion.nav
-          initial={{ y: -20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.4 }}
-          className={`z-50 sticky top-0 flex items-center justify-between w-full px-6 md:px-16 lg:px-24 xl:px-40 text-sm transition-all duration-300 ${
-            scrolled ? "bg-white shadow-sm py-3" : "bg-transparent py-4"
-          }`}
-        >
-          <a href="https://superezz.com">
-            <img src="/viewme-logo.png" alt="ViewMe" className="h-11 w-auto object-contain" />
-          </a>
+    <div className="relative min-h-screen flex flex-col items-center justify-start overflow-hidden bg-[#030712]">
+      {/* Background Grid & Blur */}
+      <div className="absolute inset-0 z-0 h-full w-full bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+      <div className="absolute left-0 right-0 top-0 -z-10 m-auto h-[310px] w-[310px] rounded-full bg-brand-primary opacity-20 blur-[100px]"></div>
 
-          <div className="hidden md:flex items-center gap-8 text-slate-800 font-medium">
-            <a href="#" className="hover:text-brand-primary transition-colors duration-200">
-              Home
-            </a>
-            <a href="#features" className="hover:text-brand-primary transition-colors duration-200">
-              Features
-            </a>
-            <a href="#testimonials" className="hover:text-brand-primary transition-colors duration-200">
-              Testimonials
-            </a>
-            <a href="#cta" className="hover:text-brand-primary transition-colors duration-200">
-              Contact
-            </a>
-          </div>
+      {/* Floating Navbar */}
+      <motion.nav
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        className={cn(
+          "fixed top-4 z-50 flex items-center justify-between w-[90%] max-w-5xl px-6 py-3 mx-auto rounded-full border border-white/10 transition-all duration-300",
+          scrolled ? "bg-black/40 backdrop-blur-md shadow-[0_8px_32px_0_rgba(0,0,0,0.3)]" : "bg-transparent border-transparent"
+        )}
+      >
+        <a href="/" className="flex items-center gap-2">
+          {/* Mock Logo using text for dark theme adaptability */}
+          <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">ViewMe</span>
+        </a>
 
-          <div className="flex gap-2">
-            <Link
-              to="/app?state=register"
-              className="hidden md:block px-6 py-2 bg-brand-primary hover:bg-brand-primary-hover hover:-translate-y-0.5 active:scale-95 transition-all duration-200 rounded-full text-white shadow-sm hover:shadow-md"
-              hidden={user}
-            >
-              Get started
-            </Link>
-            <Link
-              to="app?state=login"
-              className="hidden md:block px-6 py-2 border border-slate-200 hover:border-slate-300 hover:bg-slate-50 active:scale-95 transition-all duration-200 rounded-full text-slate-700"
-              hidden={user}
-            >
-              Login
-            </Link>
+        <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
+          <a href="#" className="hover:text-white transition-colors">Home</a>
+          <a href="#features" className="hover:text-white transition-colors">Features</a>
+          <a href="#testimonials" className="hover:text-white transition-colors">Testimonials</a>
+        </div>
+
+        <div className="flex items-center gap-3">
+          {!user ? (
+            <>
+              <Link
+                to="/app?state=login"
+                className="hidden md:block text-sm font-medium text-slate-300 hover:text-white transition-colors"
+              >
+                Sign in
+              </Link>
+              <Link
+                to="/app?state=register"
+                className="hidden md:flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-white/10 border border-white/20 rounded-full hover:bg-white/20 transition-all"
+              >
+                Get Started
+              </Link>
+            </>
+          ) : (
             <Link
               to="/app"
-              className="hidden md:block px-8 py-2 bg-brand-primary hover:bg-brand-primary-hover hover:-translate-y-0.5 active:scale-95 transition-all duration-200 rounded-full text-white shadow-sm hover:shadow-md"
-              hidden={!user}
+              className="hidden md:flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-brand-primary hover:bg-brand-primary-hover rounded-full shadow-[0_0_15px_rgba(82,69,255,0.5)] transition-all"
             >
               Dashboard
             </Link>
-          </div>
+          )}
 
           <button
             onClick={() => setMenuOpen(true)}
-            className="md:hidden active:scale-95 transition-transform"
+            className="md:hidden text-slate-300 hover:text-white"
+            aria-label="Open main menu"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="26"
-              height="26"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              className="lucide lucide-menu text-slate-700"
-            >
-              <path d="M4 5h16M4 12h16M4 19h16" />
-            </svg>
+            <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
           </button>
-        </motion.nav>
+        </div>
+      </motion.nav>
 
-        {/* Mobile Menu */}
-        <div
-          className={`fixed inset-0 z-[100] bg-white text-slate-800 flex flex-col items-center justify-center text-lg gap-8 md:hidden transition-transform duration-300 ease-in-out ${
-            menuOpen ? "translate-x-0" : "-translate-x-full"
-          }`}
+      {/* Hero Content */}
+      <div className="relative z-10 flex flex-col items-center justify-center w-full max-w-[1400px] px-6 pt-48 pb-24 mx-auto text-center">
+        
+        {/* Animated Badge */}
+        <motion.div
+          custom={0}
+          initial="hidden"
+          animate="visible"
+          variants={fadeUpVariants}
+          className="inline-flex items-center gap-2 px-4 py-1.5 mb-10 text-xs font-semibold uppercase tracking-widest rounded-full bg-white/5 border border-white/10 text-slate-300 backdrop-blur-sm"
         >
-          <a href="#" className="hover:text-brand-primary font-medium transition-colors" onClick={() => setMenuOpen(false)}>
-            Home
-          </a>
-          <a href="#features" className="hover:text-brand-primary font-medium transition-colors" onClick={() => setMenuOpen(false)}>
-            Features
-          </a>
-          <a href="#testimonials" className="hover:text-brand-primary font-medium transition-colors" onClick={() => setMenuOpen(false)}>
-            Testimonials
-          </a>
-          <a href="#contact" className="hover:text-brand-primary font-medium transition-colors" onClick={() => setMenuOpen(false)}>
-            Contact
-          </a>
-          <button
-            onClick={() => setMenuOpen(false)}
-            className="mt-4 active:scale-95 size-10 flex items-center justify-center bg-slate-100 hover:bg-slate-200 transition-colors text-slate-700 rounded-full"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-          </button>
-        </div>
+          <span className="flex h-1.5 w-1.5 rounded-full bg-brand-primary animate-pulse"></span>
+          Intelligent AI Resume Builder
+        </motion.div>
 
-        {/* Hero Section */}
-        <div className="flex-1 relative flex flex-col items-center justify-center text-sm px-4 md:px-16 lg:px-24 xl:px-40 text-black mt-10 md:mt-16">
-          <motion.div
-            variants={staggerContainer}
-            initial="hidden"
-            animate="visible"
-            className="flex flex-col items-center justify-center w-full"
-          >
-            {/* Avatars + Stars */}
-            <motion.div variants={fadeUp} className="flex flex-col sm:flex-row items-center gap-4 mb-6">
-              <div className="flex -space-x-3">
-                <img
-                  src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=100&h=100&auto=format&fit=crop"
-                  alt="User 1"
-                  className="size-9 object-cover rounded-full border-2 border-white shadow-sm z-[1]"
-                />
-                <img
-                  src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=100&h=100&auto=format&fit=crop"
-                  alt="User 2"
-                  className="size-9 object-cover rounded-full border-2 border-white shadow-sm z-[2]"
-                />
-                <img
-                  src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=100&h=100&auto=format&fit=crop"
-                  alt="User 3"
-                  className="size-9 object-cover rounded-full border-2 border-white shadow-sm z-[3]"
-                />
-                <img
-                  src="https://images.unsplash.com/photo-1527980965255-d3b416303d12?q=80&w=100&h=100&auto=format&fit=crop"
-                  alt="User 4"
-                  className="size-9 object-cover rounded-full border-2 border-white shadow-sm z-[4]"
-                />
-              </div>
+        {/* Giant Typography Headline */}
+        <motion.h1
+          custom={1}
+          initial="hidden"
+          animate="visible"
+          variants={fadeUpVariants}
+          className="text-[4rem] sm:text-[6rem] md:text-[8rem] lg:text-[10rem] font-bold tracking-tighter text-white mb-8 leading-[0.85] w-full"
+        >
+          <span className="block text-slate-100">CRAFT YOUR</span>
+          <span className="block text-transparent bg-clip-text bg-gradient-to-br from-brand-primary via-purple-400 to-white">
+            NARRATIVE.
+          </span>
+        </motion.h1>
 
-              <div className="flex flex-col items-center sm:items-start">
-                <div className="flex gap-0.5 mb-1">
-                  {Array(5)
-                    .fill(0)
-                    .map((_, i) => (
-                      <svg
-                        key={i}
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="14"
-                        height="14"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                        stroke="none"
-                        className="text-yellow-400"
-                        aria-hidden="true"
-                      >
-                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                      </svg>
-                    ))}
-                </div>
-                <p className="text-[13px] font-medium text-slate-600">Built for modern job seekers</p>
-              </div>
-            </motion.div>
-
-            {/* Headline */}
-            <motion.h1
-              variants={fadeUp}
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-[68px] font-bold max-w-[900px] text-center leading-[1.15] text-brand-navy tracking-tight"
+        {/* Structured Subheadline Container */}
+        <motion.div
+          custom={2}
+          initial="hidden"
+          animate="visible"
+          variants={fadeUpVariants}
+          className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16 mt-8 max-w-4xl border-t border-white/10 pt-8"
+        >
+          <p className="text-left text-lg md:text-xl text-slate-400 leading-relaxed max-w-md">
+            Stop blending in. Use intelligent AI to generate dynamic, ATS-friendly resumes that highlight your true potential.
+          </p>
+          <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
+            <Link
+              to="/app"
+              className="group relative inline-flex items-center justify-center w-full sm:w-auto px-10 py-4 text-base font-semibold text-white transition-all duration-300 bg-brand-primary rounded-full hover:bg-brand-primary-hover shadow-[0_0_20px_rgba(82,69,255,0.4)] hover:shadow-[0_0_40px_rgba(82,69,255,0.6)] hover:-translate-y-0.5"
             >
-              Land your dream job with an{" "}
-              <span className="bg-gradient-to-r from-brand-primary to-brand-accent bg-clip-text text-transparent">
-                AI-powered
-              </span>{" "}
-              resume.
-            </motion.h1>
-
-            <motion.p variants={fadeUp} className="max-w-[540px] text-center text-base sm:text-lg text-slate-500 my-8 leading-relaxed">
-              Create, edit, and download professional, ATS-friendly resumes in minutes with intelligent AI assistance.
-            </motion.p>
-
-            {/* CTA Buttons */}
-            <motion.div variants={fadeUp} className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
-              <Link
-                to="/app"
-                className="w-full sm:w-auto group bg-brand-primary hover:bg-brand-primary-hover text-white rounded-full px-8 h-12 flex items-center justify-center transition-all duration-200 hover:-translate-y-0.5 active:scale-95 shadow-sm hover:shadow-md font-medium"
+              Start Building
+              <svg
+                className="w-4 h-4 ml-2 transition-transform duration-300 group-hover:translate-x-1"
+                fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"
               >
-                Get started
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="ml-2 group-hover:translate-x-1 transition-transform duration-200"
-                  aria-hidden="true"
-                >
-                  <path d="M5 12h14"></path>
-                  <path d="m12 5 7 7-7 7"></path>
-                </svg>
-              </Link>
-              <button className="w-full sm:w-auto group flex items-center justify-center gap-2 border border-slate-300 hover:border-slate-400 hover:bg-slate-50 transition-all duration-200 rounded-full px-8 h-12 text-slate-700 font-medium active:scale-95">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="group-hover:text-brand-primary transition-colors"
-                  aria-hidden="true"
-                >
-                  <path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"></path>
-                  <rect x="2" y="6" width="14" height="12" rx="2"></rect>
-                </svg>
-                <span>Try demo</span>
-              </button>
-            </motion.div>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </Link>
+          </div>
+        </motion.div>
 
-            <motion.div variants={fadeUp} className="mt-20 w-full max-w-4xl px-4 hidden sm:block">
-              <div className="text-center mb-8">
-                <p className="text-sm font-medium text-slate-400 uppercase tracking-widest">Create resumes that stand out</p>
-              </div>
-            </motion.div>
-          </motion.div>
-        </div>
+        {/* Trust Indicators */}
+        <motion.div
+          custom={4}
+          initial="hidden"
+          animate="visible"
+          variants={fadeUpVariants}
+          className="mt-16 pt-8 border-t border-white/10 flex flex-col items-center"
+        >
+          <p className="text-sm font-medium text-slate-500 mb-4 uppercase tracking-widest">Trusted by professionals at</p>
+          <div className="flex flex-wrap justify-center gap-8 md:gap-12 opacity-50 grayscale hover:grayscale-0 transition-all duration-500">
+            {/* Minimal SVG Logos for companies */}
+            <svg className="h-6 w-auto text-white" viewBox="0 0 100 30" fill="currentColor"><path d="M10,15 L20,15 L15,5 Z M30,5 L30,25 M40,5 L40,25 M50,5 L50,25 L60,15 M70,5 L80,5 L80,25 L70,25 Z M90,5 L100,5 L95,25 Z"/></svg>
+            <svg className="h-6 w-auto text-white" viewBox="0 0 100 30" fill="currentColor"><path d="M10,5 L10,25 L25,25 M35,5 L45,5 M40,5 L40,25 M55,5 L70,5 M62.5,5 L62.5,25 M80,5 L95,5 M80,15 L90,15 M80,25 L95,25"/></svg>
+            <svg className="h-6 w-auto text-white" viewBox="0 0 100 30" fill="currentColor"><path d="M10,25 L15,5 L20,25 M30,5 L45,5 M37.5,5 L37.5,25 M55,25 L60,5 L65,25 M75,25 L80,5 L85,25"/></svg>
+          </div>
+        </motion.div>
       </div>
-    </>
+      
+      {/* Mobile Menu Overlay */}
+      {menuOpen && (
+        <div className="fixed inset-0 z-[100] bg-[#030712]/95 backdrop-blur-xl flex flex-col items-center justify-center p-6">
+          <button 
+            onClick={() => setMenuOpen(false)}
+            className="absolute top-6 right-6 p-2 text-slate-400 hover:text-white"
+          >
+            <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+          <div className="flex flex-col items-center gap-8 text-xl font-medium text-white">
+            <a href="#" onClick={() => setMenuOpen(false)}>Home</a>
+            <a href="#features" onClick={() => setMenuOpen(false)}>Features</a>
+            <a href="#testimonials" onClick={() => setMenuOpen(false)}>Testimonials</a>
+            {!user ? (
+              <Link to="/app?state=login" onClick={() => setMenuOpen(false)}>Sign In</Link>
+            ) : (
+              <Link to="/app" onClick={() => setMenuOpen(false)}>Dashboard</Link>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
   );
 };
 
