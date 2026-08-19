@@ -9,6 +9,11 @@ import resumeRouter from "./routes/resumeRoutes.js";
 import aiRouter from "./routes/aiRoutes.js";
 import cookieParser from "cookie-parser";
 import { errorHandler } from "./middlewares/errorMiddleware.js";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const requiredEnvVars = ['JWT_SECRET', 'GEMINI_API_KEY', 'CLIENT_URL'];
 for (const envVar of requiredEnvVars) {
@@ -31,10 +36,18 @@ app.use(cors({
 
 await connectDB();
 
-app.get("/", (req, res) => res.send("Server is Started...."));
 app.use('/api/users', userRouter)
 app.use('/api/resumes', resumeRouter)
 app.use('/api/ai', aiRouter)
+
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../client/dist')));
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, '../client', 'dist', 'index.html'));
+  });
+} else {
+  app.get("/", (req, res) => res.send("Server is Started...."));
+}
 
 app.use(errorHandler);
 

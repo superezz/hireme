@@ -51,4 +51,12 @@
     @apply outline-none focus:ring border border-gray-700 bg-gray-800 text-slate-200
     focus:ring-brand-primary/30 focus:border-brand-primary rounded-lg resize-none;
   }
+  /* Fix browser autofill styling for dark mode */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover, 
+  input:-webkit-autofill:focus, 
+  input:-webkit-autofill:active {
+    transition: background-color 5000s ease-in-out 0s;
+    -webkit-text-fill-color: #e2e8f0 !important;
+  }
 }
